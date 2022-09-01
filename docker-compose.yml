@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+    # backend
+    server:
+        container_name: expresscontainer
+        build: 
+            context: "./backend"
+            dockerfile: "Dockerfile.qa"
+        restart: always
+        ports:
+            - 4000:4001
+        expose:
+            - 4001
+        volumes:
+            - ./backend:/usr/src/devbank/backend
+        environment:
+            API_PORT: 4001
+            DB_USER: devbank-db-root
+            DB_PASSWORD: vqTZxO1dcb4AIJRp
+            DB_DATABASE: devbank
+        networks:
+            - internalnet
+        command: npm run start:dev
+
+volumes:
+    usr:
+networks:
+    internalnet:
+        driver: bridge
