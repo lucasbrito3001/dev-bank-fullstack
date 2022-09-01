@@ -1,0 +1,6 @@
+FROM node:18-alpine
+RUN mkdir -p /usr/src/devbank/backend
+WORKDIR /usr/src/devbank/backend
+COPY package*.json .
+RUN npm install
+COPY . .
