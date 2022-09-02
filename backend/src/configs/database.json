@@ -1,8 +1,0 @@
-{
-    "qa": {
-        "connectionString": "mongodb+srv://devbank-db-root:vqTZxO1dcb4AIJRp@devbank.j5t7vja.mongodb.net/?retryWrites=true&w=majority"
-    },
-    "prod": {
-        "connectionString": "mongodb+srv://devbank-db-root:vqTZxO1dcb4AIJRp@devbank.j5t7vja.mongodb.net/?retryWrites=true&w=majority"
-    }
-}
