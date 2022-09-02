@@ -3,3 +3,6 @@ dist
 
 # environment variables
 .env
+
+# configs
+./src/configs/database.json

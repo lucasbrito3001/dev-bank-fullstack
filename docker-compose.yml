@@ -18,6 +18,7 @@ services:
             DB_USER: devbank-db-root
             DB_PASSWORD: vqTZxO1dcb4AIJRp
             DB_DATABASE: devbank
+            BCRYPT_SECRET: 12dvbnk_!A.d20
         networks:
             - internalnet
         command: npm run start:dev
