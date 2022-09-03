@@ -5,4 +5,4 @@ dist
 .env
 
 # configs
-./src/configs/database.json
+src/configs/database.json

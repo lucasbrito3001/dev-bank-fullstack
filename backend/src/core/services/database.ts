@@ -5,7 +5,7 @@ export const createDatabaseConnection = () => {
     async function start() {
         try {
             console.log('[DATABASE] > Connecting...')
-            await connect(databaseConfig.qa.connectionString)
+            await connect(databaseConfig.qa.connectionString.replace('<password>', process.env.DB_PASSWORD || ''));
             console.log('[DATABASE] > The database was connected successfully')
         } catch (error) {
             console.log(`[DATABASE] > Have an error to connect to the database \n${error}`)
