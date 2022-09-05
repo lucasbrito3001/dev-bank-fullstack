@@ -33,6 +33,7 @@ app.get(`${BASE_URL}/`, (req, res) => res.status(200).send('Hello world! Welcome
 app.use(`${BASE_URL}/transactions`, TransactionRoutes)
 app.use(`${BASE_URL}/users`, AccountRoutes)
 app.use(`${BASE_URL}/publics`, PublicRoutes)
+// app.all(`*`, (req, res) => res.status(404).send("This endpoint is not available"));
 
 // responser middleware
 app.use(responser)

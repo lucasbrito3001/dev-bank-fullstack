@@ -2,15 +2,7 @@ import { ObjectId } from 'mongodb'
 import { model, Schema } from 'mongoose'
 
 const schema = new Schema({
-    _id: {
-        type: ObjectId,
-        primary: true
-    },
     name: {
-        type: String,
-        required: true
-    },
-    phone: {
         type: String,
         required: true
     },
