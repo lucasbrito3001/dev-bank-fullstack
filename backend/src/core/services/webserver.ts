@@ -8,8 +8,9 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerDocs from '@configs/swagger.json'
 
 // routes
-import TransactionRoutes from '@modules/transaction/transaction.routes'
-import AccountRoutes from '@modules/user/user.routes'
+import TransactionRoutes from '@modules/auth/transaction/transaction.routes'
+import AccountRoutes from '@modules/auth/user/user.routes'
+import PublicRoutes from '@modules/public/public.routes'
 import { responser } from "src/services/utils"
 
 // express server
@@ -27,6 +28,7 @@ const BASE_URL = '/api/v1'
 app.get(`${BASE_URL}/`, (req, res) => res.status(200).send('Hello world! Welcome to the DevBank API...'))
 app.use(`${BASE_URL}/transactions`, TransactionRoutes)
 app.use(`${BASE_URL}/users`, AccountRoutes)
+app.use(`${BASE_URL}/publics`, PublicRoutes)
 
 // responser middleware
 app.use(responser)
