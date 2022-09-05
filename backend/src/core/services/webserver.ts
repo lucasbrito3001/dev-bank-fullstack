@@ -2,6 +2,8 @@
 import express from "express"
 import morgan from "morgan"
 import cors from "cors"
+import { config } from 'dotenv'
+config()
 
 // swagger docs
 import swaggerUi from 'swagger-ui-express'
