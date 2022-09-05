@@ -14,6 +14,7 @@ import TransactionRoutes from '@modules/auth/transaction/transaction.routes'
 import AccountRoutes from '@modules/auth/user/user.routes'
 import PublicRoutes from '@modules/public/public.routes'
 import { responser } from "src/services/utils"
+import { verifyJWT } from "src/services/auth"
 
 // express server
 const app = express()
@@ -27,6 +28,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 // declaring routes
 const BASE_URL = '/api/v1'
 
+app.all(`${BASE_URL}/protecteds/*`, verifyJWT)
 app.get(`${BASE_URL}/`, (req, res) => res.status(200).send('Hello world! Welcome to the DevBank API...'))
 app.use(`${BASE_URL}/transactions`, TransactionRoutes)
 app.use(`${BASE_URL}/users`, AccountRoutes)
