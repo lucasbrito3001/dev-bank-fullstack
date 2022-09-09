@@ -2,6 +2,7 @@ import { NextFunction, Response } from 'express'
 import { Request } from 'express-jwt'
 import { sign, verify } from 'jsonwebtoken'
 import { IAuthService } from 'src/interfaces/auth.interface'
+import { HTTP_STATUS_CODE } from './constants'
 
 function generateJWT(
     idUser: string,
@@ -10,11 +11,11 @@ function generateJWT(
     jwtCreator = sign
 ): IAuthService {
     try {
-        if(!secret) throw new Error('INTERNAL_SERVER_ERROR,MISSING_JWT_SECRET')
+        if(!secret) throw new Error('JWT Secret is missing')
         
         const token = jwtCreator({ idUser, email }, secret, { algorithm: "HS256", expiresIn: "2h" })
     
-        if(!token) throw new Error('INTERNAL_SERVER_ERROR,DEPENDENCY ERROR')
+        if(!token) throw new Error('Have an error with the dependency that generates the JWT')
 
         return { status: true, token }
     } catch (error) {
@@ -30,12 +31,19 @@ function verifyJWT(
     jwtVerifier = verify
 ) {
     try {
-        if(!secret) throw new Error('INTERNAL_SERVER_ERROR,MISSING_JWT_SECRET')
+        if(!secret) throw new Error('JWT Secret is missing')
 
         const { authorization } = req.headers
+
+        
         if(!authorization) {
-            res.locals = { status: false, error: "UNAUTHORIZED" }
-            return next()
+            const errorType = 'FORBIDDEN'
+            const error = {
+                type: errorType
+            }
+
+            res.status(HTTP_STATUS_CODE[errorType]).json({ status: false, error })
+            return
         }
         
         const token = ('' + authorization).replace('Bearer ', '')

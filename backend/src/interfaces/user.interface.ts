@@ -1,3 +1,5 @@
+import { IFactoriesObject } from "./generalFactoryObject.interface"
+
 export interface IUserDTO {
     name: string,
     email: string,
@@ -19,8 +21,6 @@ export interface IUser {
     account: IAccount
 }
 
-export interface IUserGenerator {
-    status: boolean
+export interface IUserGenerator extends IFactoriesObject {
     user?: IUser
-    error?: any
 }

@@ -1,9 +1,9 @@
 import { Router } from 'express'
 import { tryLogin } from './public.controllers'
+import { checkMissingRequiredData, checkUserExistence } from './public.middleware'
 
 const router = Router()
 
-router.get('/', (req, res) => res.status(200).send('Hello world! Welcome to the DevBank API...'))
-router.post('/login', tryLogin)
+router.post('/login', checkMissingRequiredData, checkUserExistence,tryLogin)
 
 export default router

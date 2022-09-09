@@ -10,11 +10,11 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerDocs from '@configs/swagger.json'
 
 // routes
-import TransactionRoutes from '@modules/auth/transaction/transaction.routes'
-import AccountRoutes from '@modules/auth/user/user.routes'
+import TransactionRoutes from '@modules/protected/transaction/transaction.routes'
+import AccountRoutes from '@modules/protected/user/user.routes'
 import PublicRoutes from '@modules/public/public.routes'
-import { responser } from "src/services/utils"
 import { verifyJWT } from "src/services/auth"
+import { HTTP_STATUS_CODE } from "src/services/constants"
 
 // express server
 const app = express()
@@ -26,17 +26,27 @@ app.use(cors())
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 // declaring routes
-const BASE_URL = '/api/v1'
+const BASE_ENDPOINT = '/api/v1'
+const BASE_PUBLIC_ENDPOINT = `${BASE_ENDPOINT}/public`
+const BASE_PROTECTED_ENDPOINT = `${BASE_ENDPOINT}/protected`
 
-app.all(`${BASE_URL}/protecteds/*`, verifyJWT)
-app.get(`${BASE_URL}/`, (req, res) => res.status(200).send('Hello world! Welcome to the DevBank API...'))
-app.use(`${BASE_URL}/transactions`, TransactionRoutes)
-app.use(`${BASE_URL}/users`, AccountRoutes)
-app.use(`${BASE_URL}/publics`, PublicRoutes)
-// app.all(`*`, (req, res) => res.status(404).send("This endpoint is not available"));
+app.get(`${BASE_ENDPOINT}/`, (req, res) => res.status(200).send('Hello world! Welcome to the DevBank API...'))
+// public routes
+app.use(`${BASE_PUBLIC_ENDPOINT}/`, PublicRoutes)
+// protected routes
+app.all(`${BASE_PROTECTED_ENDPOINT}/*`, verifyJWT)
+app.use(`${BASE_PROTECTED_ENDPOINT}/transactions`, TransactionRoutes)
+app.use(`${BASE_PROTECTED_ENDPOINT}/users`, AccountRoutes)
 
-// responser middleware
-app.use(responser)
+app.all('*', (req, res) => {
+    const responseJson = {
+        status: false,
+        error: `The endpoint ${req.path} don't exists, read the API documentation`,
+        docLink: `${BASE_ENDPOINT}`
+    }
+
+    res.status(HTTP_STATUS_CODE['NOT_FOUND']).json(responseJson)
+})
 
 export const createWebserver = () => {
     let server: any
