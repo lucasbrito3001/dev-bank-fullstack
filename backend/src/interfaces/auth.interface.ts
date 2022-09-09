@@ -1,5 +1,5 @@
-export interface IAuthService {
-    status: boolean
+import { IFactoriesObject } from "./generalFactoryObject.interface";
+
+export interface IAuthService extends IFactoriesObject {
     token?: string
-    error?: any
 }

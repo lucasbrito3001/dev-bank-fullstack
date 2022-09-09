@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
+import { IServerResponse } from "src/interfaces/core.interface";
 import { generateJWT } from "src/services/auth";
 import { compareHashString } from "src/services/crypt";
-import User from "../auth/user/user.models";
+import { generateInternalServerErrorResponse, responser } from "src/services/utils";
+import User from "../protected/user/user.models";
 
 async function tryLogin(
     req: Request, 
@@ -9,35 +11,36 @@ async function tryLogin(
     next: NextFunction,
     model = User
 ) {
+    let responseJson: IServerResponse = { status: true, statusHashMap: 'OK' }
     try {
         const { email, password } = req.body
 
         const user = await model.findOne({ email })
-        if(!user) {
-            res.locals = { status: false, error: 'User not found' }
-            return next()
-        }
+
+        if(!user) return
         
         const { isCorrectValue } = await compareHashString(user.password, password)
+        
         if(!isCorrectValue) {
-            res.locals = { status: false, error: 'Email or password incorrect' }
-            return next()
+            throw new Error('UNAUTHORIZED')
         }
         
         const { status, token, error } = generateJWT('' + user._id, email)
-        console.log(status, token, error)
-
-        if(!status) {
-            res.locals = { status, error }
-            return next()
-        }
-
-        res.locals = { status: true, content: { token } }
+        
+        if(!status) throw new Error(error)
+        
+        responseJson.token = token
     } catch (error) {
-        res.locals = { status: false, error }
+        let message: string = ''
+
+        if(error instanceof Error) message = error.message
+        else message = String(error)
+
+        if(message === 'UNAUTHORIZED') responseJson = generateInternalServerErrorResponse('UNAUTHORIZED', 'Unauthorized, the user sent credentials that do not match')
+        else responseJson = generateInternalServerErrorResponse('INTERNAL_SERVER_ERROR', error)
     }
 
-    next();
+    responser(res, responseJson);
 }
 
 export { tryLogin };
