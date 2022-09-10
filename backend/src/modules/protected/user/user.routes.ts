@@ -6,7 +6,6 @@ const router = Router()
 
 router.get('/', readAll)
 router.get('/:id', checkUserExistence, readById)
-router.post('/', checkMissingRequiredData, checkEmailDuplication, create)
 router.put('/:id', checkUserExistence, checkEmailDuplication, updateById)
 router.delete('/:id', checkUserExistence, deleteById)
 
